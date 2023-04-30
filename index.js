@@ -27,147 +27,177 @@ async function connectToDatabase() {
 
 // Set up Telegram bot
 const bot = new TelegramBot(telegramBotToken, { polling: true });
+
 const attendanceCollection = client.db(databaseName).collection('attendance');
 const attenSummeryCollection = client.db(databaseName).collection('attenSummery');
 
 
+const chkInPrompts = [
+  'hi',
+  'hello',
+  'morning',
+  'good morning'
+]
+
+const chkOutPrompts = [
+  'bye',
+  'tata',
+  'goodbye',
+  'checkout'
+]
+
+
+
 bot.on('message', async (msg) => {
+
+  if (msg.text.includes('/help')) {
+    bot.sendMessage(
+      msg.chat.id,
+      `To input checkin time mention the @choto_bot_bot with these prompts,
+      'hi',
+      'hello',
+      'morning',
+      'good morning'
+To input checkout time mention the @choto_bot_bot with these prompts,
+      'bye',
+      'tata',
+      'goodbye',
+      'checkout'
+***** Note: Your time will get recorded with the first prompts. So say hi when you are sure 😜
+      `
+    );
+
+  }
 
   const formatDate = (date) => {
     return date.toString().split(' GMT')[0];
   };
 
-  if (msg.text === 'good morning' || msg.text === 'hello') {
-    // check-in logic // ----------------->
-    const timestamp = new Date(msg.date * 1000);
-    const today = new Date().setHours(0, 0, 0, 0);
+  if (msg.text.includes('@choto_bot_bot')) {
+    if (chkInPrompts.some(prompt => msg.text.toLowerCase().includes(prompt))) {
 
-    const existingRecord = await attendanceCollection.findOne({
-      userName: msg.from.first_name,
-      userId: msg.from.id,
-      timestamp: { $gte: new Date(today) },
-      type: 'checkin',
-    });
+      // check-in logic // ----------------->
+      const timestamp = new Date(msg.date * 1000);
+      const today = new Date().setHours(0, 0, 0, 0);
 
-    if (existingRecord) {
-      bot.sendMessage(msg.chat.id, `Hi, ${msg.from.first_name}, you have already checked in today at ${formatDate(existingRecord.timestamp)}.`);
-      return;
-    }
+      const existingRecord = await attendanceCollection.findOne({
+        userName: msg.from.first_name,
+        userId: msg.from.id,
+        timestamp: { $gte: new Date(today) },
+        type: 'checkin',
+      });
 
-    console.log(`User ${msg.from.id} checked in at ${formatDate(timestamp)}`);
+      if (existingRecord) {
+        bot.sendMessage(msg.chat.id, `Hi, ${msg.from.first_name}, you have already checked in today at ${formatDate(existingRecord.timestamp)}.`);
+        return;
+      }
 
-    await attendanceCollection.insertOne({
-      userName: msg.from.first_name,
-      userId: msg.from.id,
-      timestamp,
-      type: 'checkin',
-    });
-
-    bot.sendMessage(msg.chat.id, `Hi! 👋🏻 ${msg.from.first_name}, it's ${formatDate(timestamp)} Good Morning! It's nice to have you here!`);
-
-  } else if (msg.text === 'good bye' || msg.text === 'checkout' || msg.text === 'bye') {
-    // check-out login // ------------------->
-    const timestamp = new Date(msg.date * 1000);
-    const today = new Date().setHours(0, 0, 0, 0);
-
-    const existingCheckOutRecord = await attendanceCollection.findOne({
-      userName: msg.from.first_name,
-      userId: msg.from.id,
-      timestamp: { $gte: new Date(today) },
-      type: "checkout"
-    })
-
-    const checkinRecord = await attendanceCollection.findOne({
-      userName: msg.from.first_name,
-      userId: msg.from.id,
-      timestamp: { $lt: timestamp },
-      type: "checkin",
-    })
-
-    if (existingCheckOutRecord) {
-      bot.sendMessage(msg.chat.id, `Hi, ${msg.from.first_name}, You have already checked out today at ${formatDate(existingCheckOutRecord.timestamp)}.`)
-      return
-    }
-
-    if (!checkinRecord) {
-      bot.sendMessage(msg.chat.id, `Hi, ${msg.from.first_name}, you have not checked in yet today!`);
-      return
-    }
-
-    if (checkinRecord) {
-      const totalMillis = timestamp.getTime() - checkinRecord.timestamp.getTime();
-      const totalMinutes = Math.round(totalMillis / (1000 * 60));
-      const totalHours = Math.floor(totalMinutes / 60);
-      const remainingMinutes = totalMinutes % 60;
-      const totalTime = `${totalHours} hours ${remainingMinutes} minutes`;
+      //console.log(`User ${msg.from.id} checked in at ${formatDate(timestamp)}`);
 
       await attendanceCollection.insertOne({
         userName: msg.from.first_name,
         userId: msg.from.id,
         timestamp,
-        type: 'checkout',
+        type: 'checkin',
       });
 
-      const userSummery = {
+      bot.sendMessage(msg.chat.id, `Hi! 👋🏻 ${msg.from.first_name}, it's ${formatDate(timestamp)} Good Morning! It's nice to have you here!`);
+
+    } if (chkOutPrompts.some(prompt => msg.text.toLowerCase().includes(prompt))) {
+      // check-out login // ------------------->
+      const timestamp = new Date(msg.date * 1000);
+      const today = new Date().setHours(0, 0, 0, 0);
+
+      const existingCheckOutRecord = await attendanceCollection.findOne({
+        userName: msg.from.first_name,
         userId: msg.from.id,
-        chkInTime: checkinRecord.timestamp,
-        chkOutTime: timestamp,
-        totalHours: totalHours
+        timestamp: { $gte: new Date(today) },
+        type: "checkout"
+      })
+
+      const checkinRecord = await attendanceCollection.findOne({
+        userName: msg.from.first_name,
+        userId: msg.from.id,
+        timestamp: { $lt: timestamp },
+        type: "checkin",
+      })
+
+      if (existingCheckOutRecord) {
+        bot.sendMessage(msg.chat.id, `Hi, ${msg.from.first_name}, You have already checked out today at ${formatDate(existingCheckOutRecord.timestamp)}.`)
+        return
       }
 
-      const existingSummary = await attenSummeryCollection.findOne({ date: today })
+      if (!checkinRecord) {
+        bot.sendMessage(msg.chat.id, `Hi, ${msg.from.first_name}, you have not checked in yet today!`);
+        return
+      }
 
-      if (existingSummary) {
-        const existingUserIndex = existingSummary.attendance.findIndex(
-          (attendance) => attendance.userId === msg.from.id
-        );
-        if (existingUserIndex === -1) {
-          existingSummary.attendance.push(userSummery);
-        } else {
-          existingSummary.attendance[existingUserIndex] = userSummery;
+      if (checkinRecord) {
+        const totalMillis = timestamp.getTime() - checkinRecord.timestamp.getTime();
+        const totalMinutes = Math.round(totalMillis / (1000 * 60));
+        const totalHours = Math.floor(totalMinutes / 60);
+        const remainingMinutes = totalMinutes % 60;
+        const totalTime = `${totalHours} hours ${remainingMinutes} minutes`;
+
+        await attendanceCollection.insertOne({
+          userName: msg.from.first_name,
+          userId: msg.from.id,
+          timestamp,
+          type: 'checkout',
+        });
+
+        const userSummery = {
+          userId: msg.from.id,
+          chkInTime: checkinRecord.timestamp,
+          chkOutTime: timestamp,
+          totalHours: totalHours
         }
-        await attenSummeryCollection.updateOne(
-          { _id: existingSummary._id },
-          { $set: { attendance: existingSummary.attendance } }
-        )
-      } else {
-        const newSummary = {
-          date: today,
-          attendance: [userSummery],
-        };
-        await attenSummeryCollection.insertOne(newSummary);
+
+        const existingSummary = await attenSummeryCollection.findOne({ date: today })
+
+        if (existingSummary) {
+          const existingUserIndex = existingSummary.attendance.findIndex(
+            (attendance) => attendance.userId === msg.from.id
+          );
+          if (existingUserIndex === -1) {
+            existingSummary.attendance.push(userSummery);
+          } else {
+            existingSummary.attendance[existingUserIndex] = userSummery;
+          }
+          await attenSummeryCollection.updateOne(
+            { _id: existingSummary._id },
+            { $set: { attendance: existingSummary.attendance } }
+          )
+        } else {
+          const newSummary = {
+            date: today,
+            attendance: [userSummery],
+          };
+          await attenSummeryCollection.insertOne(newSummary);
+        }
+
+
+
+        bot.sendMessage(msg.chat.id, `Bye! 👋🏻 ${msg.from.first_name}, You checked in at ${formatDate(checkinRecord.timestamp)} and checked out at ${formatDate(timestamp)}. Your total time today is ${totalTime}.`);
+
       }
 
 
 
-      bot.sendMessage(msg.chat.id, `Bye! 👋🏻 ${msg.from.first_name}, You checked in at ${formatDate(checkinRecord.timestamp)} and checked out at ${formatDate(timestamp)}. Your total time today is ${totalTime}.`);
 
     }
 
-
-
-
   }
+
+
 });
-
-
-// Helper functions to format date and time
-function formatDate(date) {
-  const options = { year: 'numeric', month: 'short', day: 'numeric' };
-  return date.toLocaleDateString('en-US', options);
-}
-
-function formatTime(date) {
-  const options = { hour: 'numeric', minute: 'numeric', hour12: true };
-  return date.toLocaleTimeString('en-US', options);
-}
 
 
 
 app.get('/attendance/:userId', async (req, res) => {
   try {
     const userId = parseInt(req.params.userId);
-    console.log(userId)
+    //console.log(userId)
     // Find all the documents that contain attendance records for the given user
     const records = await attenSummeryCollection.find().toArray();
     // console.log(records.length)
@@ -183,7 +213,7 @@ app.get('/attendance/:userId', async (req, res) => {
 
     res.send(userArray);
   } catch (error) {
-    console.error('Failed to get attendance records:', error);
+    //console.error('Failed to get attendance records:', error);
     res.status(500).send('Failed to get attendance records');
   }
 });
