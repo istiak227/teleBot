@@ -30,7 +30,13 @@ const bot = new TelegramBot(telegramBotToken, { polling: true });
 const attendanceCollection = client.db(databaseName).collection('attendance');
 
 bot.on('message', async (msg) => {
+
+  const formatDate = (date) => {
+    return date.toString().split(' GMT')[0];
+  };
+
   if (msg.text === 'good morning' || msg.text === 'hello') {
+    // check-in logic // ----------------->
     const timestamp = new Date(msg.date * 1000);
     const today = new Date().setHours(0, 0, 0, 0);
 
@@ -41,12 +47,11 @@ bot.on('message', async (msg) => {
     });
 
     if (existingRecord) {
-      console.log(`User ${msg.from.id} has already checked in today at ${existingRecord.timestamp}`);
-      bot.sendMessage(msg.chat.id, `Hi, ${msg.from.first_name}, you have already checked in today at ${existingRecord.timestamp}`);
+      bot.sendMessage(msg.chat.id, `Hi, ${msg.from.first_name}, you have already checked in today at ${formatDate(existingRecord.timestamp)}.`);
       return;
     }
 
-    console.log(`User ${msg.from.id} checked in at ${timestamp}`);
+    console.log(`User ${msg.from.id} checked in at ${formatDate(timestamp)}`);
 
     await attendanceCollection.insertOne({
       userId: msg.from.id,
@@ -54,19 +59,50 @@ bot.on('message', async (msg) => {
       type: 'checkin',
     });
 
-    bot.sendMessage(msg.chat.id, `Hi, ${msg.from.first_name}, it's ${timestamp} Good Morning! It's nice to have you here!`,);
-  } else if (msg.text === 'good bye' || msg.text === 'checkout') {
+    bot.sendMessage(msg.chat.id, `Hi! 👋🏻 ${msg.from.first_name}, it's ${formatDate(timestamp)} Good Morning! It's nice to have you here!`,);
+  } else if (msg.text === 'good bye' || msg.text === 'checkout' || msg.text === 'bye') {
+    // check-out login // ------------------->
     const timestamp = new Date(msg.date * 1000);
+    const today = new Date().setHours(0, 0, 0, 0);
 
-    console.log(`User ${msg.from.id} checked out at ${timestamp}`);
-
-    await attendanceCollection.insertOne({
+    const existingCheckOutRecord = await attendanceCollection.findOne({
       userId: msg.from.id,
-      timestamp,
-      type: 'checkout',
-    });
+      timestamp: { $gte: new Date(today) },
+      type: "checkout"
+    })
 
-    bot.sendMessage(msg.chat.id, 'Bye! See you again');
+    const checkinRecord = await attendanceCollection.findOne({
+      userId: msg.from.id,
+      timestamp: { $lt: timestamp },
+      type: "checkin",
+    })
+
+    if (existingCheckOutRecord) {
+      bot.sendMessage(msg.chat.id, `Hi, ${msg.from.first_name}, You have already checked out today at ${formatDate(existingCheckOutRecord.timestamp)}.`)
+      return
+    }
+
+    if (!checkinRecord) {
+      bot.sendMessage(msg.chat.id, `Hi, ${msg.from.first_name}, you have not checked in yet today!`);
+      return
+    }
+
+    if (checkinRecord) {
+      const totalMillis = timestamp.getTime() - checkinRecord.timestamp.getTime();
+      const totalMinutes = Math.round(totalMillis / (1000 * 60));
+      const totalHours = Math.floor(totalMinutes / 60);
+      const remainingMinutes = totalMinutes % 60;
+      const totalTime = `${totalHours} hours ${remainingMinutes} minutes`;
+      
+      await attendanceCollection.insertOne({
+        userId: msg.from.id,
+        timestamp,
+        type: 'checkout',
+      });
+      bot.sendMessage(msg.chat.id, `Bye! 👋🏻 ${msg.from.first_name}, You checked in at ${formatDate(checkinRecord.timestamp)} and checked out at ${formatDate(timestamp)}. Your total time today is ${totalTime}.`);
+    }
+
+
   }
 });
 
