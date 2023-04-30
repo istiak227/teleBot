@@ -1,0 +1,23 @@
+{
+	"userId": 123456789,
+	"attendence": [
+		{
+			"date": "2023-05-01T00:00:00Z",
+			"checkinTime": "2023-05-01T08:30:00Z",
+			"checkoutTime": "2023-05-01T17:00:00Z",
+			"totalTime": 8.5
+		},
+		{
+			"date": "2023-06-01T00:00:00Z",
+			"checkinTime": "2023-05-01T08:30:00Z",
+			"checkoutTime": "2023-05-01T17:00:00Z",
+			"totalTime": 8.5
+		},
+		{
+			"date": "2023-06-01T00:00:00Z",
+			"checkinTime": "2023-05-01T08:30:00Z",
+			"checkoutTime": "2023-05-01T17:00:00Z",
+			"totalTime": 8.5
+		}
+	]
+}
