@@ -52,14 +52,15 @@ const chkOutPrompts = [
 
 bot.on('message', async (msg) => {
 
-  if (msg.text.includes('/help')) {
+  if (msg.text?.includes('/help')) {
     bot.sendMessage(
       msg.chat.id,
       `To input checkin time mention the @choto_bot_bot with these prompts,
       'hi',
       'hello',
       'morning',
-      'good morning'
+      'good morning',
+      'salam'
 To input checkout time mention the @choto_bot_bot with these prompts,
       'bye',
       'tata',
@@ -75,8 +76,8 @@ To input checkout time mention the @choto_bot_bot with these prompts,
     return date.toString().split(' GMT')[0];
   };
 
-  if (msg.text.includes('@choto_bot_bot')) {
-    if (chkInPrompts.some(prompt => msg.text.toLowerCase().includes(prompt))) {
+  if (msg.text?.includes('@choto_bot_bot')) {
+    if (chkInPrompts.some(prompt => msg.text?.toLowerCase().includes(prompt))) {
 
       // check-in logic // ----------------->
       const timestamp = new Date(msg.date * 1000);
@@ -105,7 +106,7 @@ To input checkout time mention the @choto_bot_bot with these prompts,
 
       bot.sendMessage(msg.chat.id, `Hi! 👋🏻 ${msg.from.first_name}, it's ${formatDate(timestamp)} Good Morning! It's nice to have you here!`);
 
-    } if (chkOutPrompts.some(prompt => msg.text.toLowerCase().includes(prompt))) {
+    } if (chkOutPrompts.some(prompt => msg.text?.toLowerCase().includes(prompt))) {
       // check-out login // ------------------->
       const timestamp = new Date(msg.date * 1000);
       const today = new Date().setHours(0, 0, 0, 0);
