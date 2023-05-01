@@ -78,7 +78,7 @@ To input checkout time mention the @choto_bot_bot with these prompts,
 
 
   //  Remove this comment for Production & Main Bot
-  // if (msg.text?.includes('@choto_bot_bot')) {
+  if (msg.text?.includes('@choto_bot_bot')) {
   if (chkInPrompts.some(prompt => msg.text?.toLowerCase().includes(prompt))) {
 
     // check-in logic // ----------------->
@@ -236,7 +236,7 @@ To input checkout time mention the @choto_bot_bot with these prompts,
     }
   }
 
-  // }
+  }
   // Remove this comment for Production & Main Bot
 
 
