@@ -76,6 +76,8 @@ To input checkout time mention the @choto_bot_bot with these prompts,
     return date.toString().split(' GMT')[0];
   };
 
+
+  //  Remove this comment for Production & Main Bot
   if (msg.text?.includes('@choto_bot_bot')) {
     if (chkInPrompts.some(prompt => msg.text?.toLowerCase().includes(prompt))) {
 
@@ -121,8 +123,8 @@ To input checkout time mention the @choto_bot_bot with these prompts,
       const checkinRecord = await attendanceCollection.findOne({
         userName: msg.from.first_name,
         userId: msg.from.id,
-        timestamp: { $lt: timestamp },
-        type: "checkin",
+        timestamp: { $gte: new Date(today) },
+        type: 'checkin',
       })
 
       if (existingCheckOutRecord) {
@@ -153,7 +155,7 @@ To input checkout time mention the @choto_bot_bot with these prompts,
           userId: msg.from.id,
           chkInTime: checkinRecord.timestamp,
           chkOutTime: timestamp,
-          totalHours: totalHours
+          totalHours: `${totalHours}.${remainingMinutes}`
         }
 
         const existingSummary = await attenSummeryCollection.findOne({ date: today })
@@ -191,6 +193,8 @@ To input checkout time mention the @choto_bot_bot with these prompts,
     }
 
   }
+
+  // Remove this comment for Production & Main Bot
 
 
 });
