@@ -36,7 +36,9 @@ const chkInPrompts = [
   'hi',
   'hello',
   'morning',
-  'good morning'
+  'good morning',
+  "salam"
+
 ]
 
 const chkOutPrompts = [
