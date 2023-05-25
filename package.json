@@ -3,7 +3,8 @@
     "dotenv": "^16.0.3",
     "express": "^4.18.2",
     "mongodb": "^5.1.0",
-    "node-telegram-bot-api": "^0.61.0"
+    "node-telegram-bot-api": "^0.61.0",
+    "nodemon": "^2.0.22"
   },
   "name": "telebot",
   "version": "1.0.0",

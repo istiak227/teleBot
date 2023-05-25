@@ -77,10 +77,27 @@ To input checkout time mention the @choto_bot_bot with these prompts,
 
 
   //  Remove this comment for Production & Main Bot
-  if (msg.text?.includes('@choto_bot_bot')) {
+  // if (msg.text?.includes('@choto_bot_bot')) {
 
   if (chkInPrompts.some(prompt => msg.text?.toLowerCase().includes(prompt))) {
 
+    // check-in logic // ----------------->
+    const timestamp = new Date(msg.date * 1000);
+    const today = new Date().setHours(0, 0, 0, 0);
+
+    const existingRecord = await attendanceCollection.findOne({
+      userName: msg.from.first_name,
+      userId: msg.from.id,
+      timestamp: { $gte: new Date(today) },
+      type: 'checkin',
+    });
+
+    if (existingRecord) {
+      bot.sendMessage(msg.chat.id, `Hi, ${msg.from.first_name}, you have already checked in today at ${formatDate(existingRecord.timestamp)}.`);
+      return;
+    }
+
+    // First Time checkin Prompt **************************** ------>
     bot.sendMessage(msg.chat.id, 'Please let us know you are here by sharing your current location.', {
       reply_markup: {
         keyboard: [
@@ -92,7 +109,7 @@ To input checkout time mention the @choto_bot_bot with these prompts,
 
     // check-out logic // -------------------> ***********************
   } if (chkOutPrompts.some(prompt => msg.text?.toLowerCase().includes(prompt))) {
-    
+
     // check-out login // -------------------> ***********************
     // check-out login // -------------------> ***********************
     const timestamp = new Date(msg.date * 1000);
@@ -222,7 +239,7 @@ To input checkout time mention the @choto_bot_bot with these prompts,
     }
   }
 
-  }
+  // }
   // Remove this comment for Production & Main Bot
 
 
@@ -234,7 +251,7 @@ bot.on('location', async (msg) => {
   const chatId = msg.chat.id;
   const { latitude, longitude } = msg.location;
 
-  console.log(latitude, longitude)
+  //console.log(latitude, longitude)
   // Implement location validation logic
   const isValidLocation = validateLocation(latitude, longitude);
 
@@ -244,6 +261,20 @@ bot.on('location', async (msg) => {
   if (isValidLocation) {
     // Attendance is valid
     // check-in logic // ----------------->
+
+    const currentTime = new Date();
+    const currentHour = currentTime.getHours();
+
+    let greeting = '';
+
+    if (currentHour >= 5 && currentHour < 12) {
+      greeting = 'Good morning!';
+    } else if (currentHour >= 12 && currentHour < 17) {
+      greeting = 'Good afternoon!';
+    } else {
+      greeting = 'Good evening!';
+    }
+
     const timestamp = new Date(msg.date * 1000);
     const today = new Date().setHours(0, 0, 0, 0);
 
@@ -267,7 +298,7 @@ bot.on('location', async (msg) => {
       timestamp,
       type: 'checkin',
     });
-    bot.sendMessage(msg.chat.id, `Hi! 👋🏻 ${msg.from.first_name}, it's ${formatDate(timestamp)} Good Morning! It's nice to have you here!`);
+    bot.sendMessage(msg.chat.id, `Hi! 👋🏻 ${msg.from.first_name}, it's ${formatDate(timestamp)} ${greeting} It's nice to have you here!`);
 
   } else {
     // Invalid location
