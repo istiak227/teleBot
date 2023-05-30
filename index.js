@@ -58,13 +58,13 @@ bot.on('message', async (msg) => {
   if (msg.text?.includes('/help')) {
     bot.sendMessage(
       msg.chat.id,
-      `To input checkin time mention the @choto_bot_bot with these prompts,
+      `To input checkin time message with these prompts,
       'hi',
       'hello',
       'morning',
       'good morning',
       'salam'
-To input checkout time mention the @choto_bot_bot with these prompts,
+To input checkout time message with these prompts,
       'bye',
       'tata',
       'goodbye',
@@ -82,6 +82,19 @@ To input checkout time mention the @choto_bot_bot with these prompts,
   if (chkInPrompts.some(prompt => msg.text?.toLowerCase().includes(prompt))) {
 
     // check-in logic // ----------------->
+    const currentTime = new Date();
+    const currentHour = currentTime.getHours();
+
+    let greeting = '';
+
+    if (currentHour >= 5 && currentHour < 12) {
+      greeting = 'Good morning!';
+    } else if (currentHour >= 12 && currentHour < 17) {
+      greeting = 'Good afternoon!';
+    } else {
+      greeting = 'Good evening!';
+    }
+
     const timestamp = new Date(msg.date * 1000);
     const today = new Date().setHours(0, 0, 0, 0);
 
@@ -97,15 +110,25 @@ To input checkout time mention the @choto_bot_bot with these prompts,
       return;
     }
 
-    // First Time checkin Prompt **************************** ------>
-    bot.sendMessage(msg.chat.id, 'Please let us know you are here by sharing your current location.', {
-      reply_markup: {
-        keyboard: [
-          [{ text: 'Share Location', request_location: true }]
-        ],
-        one_time_keyboard: true
-      }
+    await attendanceCollection.insertOne({
+      userName: msg.from.first_name,
+      userId: msg.from.id,
+      timestamp,
+      type: 'checkin',
     });
+
+    bot.sendMessage(msg.chat.id, `Hi! 👋🏻 ${msg.from.first_name}, it's ${formatDate(timestamp)} ${greeting} It's nice to have you here!`);
+
+
+    // First Time checkin Prompt **************************** ------>
+    // bot.sendMessage(msg.chat.id, 'Please let us know you are here by sharing your current location.', {
+    //   reply_markup: {
+    //     keyboard: [
+    //       [{ text: 'Share Location', request_location: true }]
+    //     ],
+    //     one_time_keyboard: true
+    //   }
+    // });
 
     // check-out logic // -------------------> ***********************
   } if (chkOutPrompts.some(prompt => msg.text?.toLowerCase().includes(prompt))) {
@@ -196,48 +219,146 @@ To input checkout time mention the @choto_bot_bot with these prompts,
   }
 
   // Summery Logics *********************** ---------------->
-  if (msg.text?.includes('/mysum')) {
+  // if (msg.text?.includes('/mysum')) {
+  //   try {
+  //     const userId = msg.from.id;
+  //     const records = await attenSummeryCollection.find().toArray();
+  //     let userArray = [];
+  //     records.map(data => {
+  //       data.attendance.map(finalData => {
+  //         if (finalData.userId === userId) {
+  //           const dateString = finalData.chkInTime;
+  //           const date = new Date(dateString);
+  //           const day = date.getDate();
+  //           const month = date.getMonth() + 1; // Add 1 to the month because it is zero-indexed
+  //           const formattedDate = `${day}/${month}`;
+
+  //           const formattedData = {
+  //             date: formattedDate,
+  //             inTime: finalData.chkInTime ? finalData.chkInTime.toLocaleTimeString('en-US', { hour12: false, hour: 'numeric', minute: 'numeric' }).replace(':', '') : '---',
+  //             outTime: finalData.chkOutTime ? finalData.chkOutTime.toLocaleTimeString('en-US', { hour12: false, hour: 'numeric', minute: 'numeric' }).replace(':', '') : '---',
+  //             totalTime: finalData.totalHours ? finalData.totalHours : '---'
+  //           };
+  //           userArray.push(formattedData);
+  //         }
+  //       });
+  //     });
+
+  //     let message = `<b>Attendance Summary of ${msg.from.first_name}</b>\n\n`;
+  //     message += '<b>Date | In | Out | Total</b>\n';
+
+  //     userArray.forEach(data => {
+  //       const { date, inTime, outTime, totalTime } = data;
+  //       //const formattedDate = date.toLocaleDateString('en-US', { year: '2-digit', month: '2-digit' }).replace('/', '-');
+  //       const formattedDate = date;
+  //       message += `${formattedDate} | ${inTime} | ${outTime} | ${totalTime}\n`;
+  //     });
+
+  //     bot.sendMessage(msg.chat.id, message, { parse_mode: 'HTML' });
+
+  //   } catch (error) {
+  //     console.error('Failed to get attendance records:', error);
+  //     bot.sendMessage(msg.chat.id, 'Failed to get attendance records');
+  //   }
+  // }
+
+
+  // Summary Logics
+  if (msg.text?.startsWith('/mysum')) {
     try {
       const userId = msg.from.id;
-      const records = await attenSummeryCollection.find().toArray();
-      let userArray = [];
-      records.map(data => {
-        data.attendance.map(finalData => {
-          if (finalData.userId === userId) {
-            const dateString = finalData.chkInTime;
-            const date = new Date(dateString);
-            const day = date.getDate();
-            const month = date.getMonth() + 1; // Add 1 to the month because it is zero-indexed
-            const formattedDate = `${day}/${month}`;
+      const command = msg.text.split(' ')[0];
+      const commandParts = msg.text.split(' ');
 
-            const formattedData = {
-              date: formattedDate,
-              inTime: finalData.chkInTime ? finalData.chkInTime.toLocaleTimeString('en-US', { hour12: false, hour: 'numeric', minute: 'numeric' }).replace(':', '') : '---',
-              outTime: finalData.chkOutTime ? finalData.chkOutTime.toLocaleTimeString('en-US', { hour12: false, hour: 'numeric', minute: 'numeric' }).replace(':', '') : '---',
-              totalTime: finalData.totalHours ? finalData.totalHours : '---'
-            };
-            userArray.push(formattedData);
-          }
+      if (commandParts.length === 1) {
+        // Show all attendance summary
+        const records = await attenSummeryCollection.find().toArray();
+        let userArray = [];
+
+        records.forEach(data => {
+          data.attendance.forEach(finalData => {
+            if (finalData.userId === userId) {
+              const dateString = finalData.chkInTime;
+              const date = new Date(dateString);
+              const day = date.getDate();
+              const month = date.getMonth() + 1;
+              const formattedDate = `${day}/${month}`;
+
+              const formattedData = {
+                date: formattedDate,
+                inTime: finalData.chkInTime ? finalData.chkInTime.toLocaleTimeString('en-US', { hour12: false, hour: 'numeric', minute: 'numeric' }).replace(':', '') : '---',
+                outTime: finalData.chkOutTime ? finalData.chkOutTime.toLocaleTimeString('en-US', { hour12: false, hour: 'numeric', minute: 'numeric' }).replace(':', '') : '---',
+                totalTime: finalData.totalHours ? finalData.totalHours : '---'
+              };
+              userArray.push(formattedData);
+            }
+          });
         });
-      });
 
-      let message = `<b>Attendance Summary of ${msg.from.first_name}</b>\n\n`;
-      message += '<b>Date | In | Out | Total</b>\n';
+        let message = `<b>Attendance Summary of ${msg.from.first_name}</b>\n\n`;
+        message += '<b>Date | In | Out | Total</b>\n';
 
-      userArray.forEach(data => {
-        const { date, inTime, outTime, totalTime } = data;
-        //const formattedDate = date.toLocaleDateString('en-US', { year: '2-digit', month: '2-digit' }).replace('/', '-');
-        const formattedDate = date;
-        message += `${formattedDate} | ${inTime} | ${outTime} | ${totalTime}\n`;
-      });
+        userArray.forEach(data => {
+          const { date, inTime, outTime, totalTime } = data;
+          message += `${date} | ${inTime} | ${outTime} | ${totalTime}\n`;
+        });
 
-      bot.sendMessage(msg.chat.id, message, { parse_mode: 'HTML' });
+        bot.sendMessage(msg.chat.id, message, { parse_mode: 'HTML' });
+      } else if (commandParts.length === 2) {
+        // Show attendance summary for the specified month
+        const monthInput = commandParts[1];
+        const month = parseInt(monthInput, 10);
 
+        if (isNaN(month) || month < 1 || month > 12) {
+          bot.sendMessage(msg.chat.id, 'Invalid month input. Please enter a valid month (e.g., 05 for May)');
+          return;
+        }
+
+        const records = await attenSummeryCollection.find().toArray();
+        let userArray = [];
+
+        records.forEach(data => {
+          data.attendance.forEach(finalData => {
+            if (finalData.userId === userId) {
+              const dateString = finalData.chkInTime;
+              const date = new Date(dateString);
+              const recordMonth = date.getMonth() + 1;
+              if (recordMonth === month) {
+                const day = date.getDate();
+                const formattedDate = `${day}/${month}`;
+
+                const formattedData = {
+                  date: formattedDate,
+                  inTime: finalData.chkInTime ? finalData.chkInTime.toLocaleTimeString('en-US', { hour12: false, hour: 'numeric', minute: 'numeric' }).replace(':', '') : '---',
+                  outTime: finalData.chkOutTime ? finalData.chkOutTime.toLocaleTimeString('en-US', { hour12: false, hour: 'numeric', minute: 'numeric' }).replace(':', '') : '---',
+                  totalTime: finalData.totalHours ? finalData.totalHours : '---'
+                };
+                userArray.push(formattedData);
+              }
+            }
+          });
+        });
+
+        let message = `<b>Attendance Summary of ${msg.from.first_name} (Month: ${monthInput})</b>\n\n`;
+        message += '<b>Date | In | Out | Total</b>\n';
+
+        userArray.forEach(data => {
+          const { date, inTime, outTime, totalTime } = data;
+          message += `${date} | ${inTime} | ${outTime} | ${totalTime}\n`;
+        });
+
+        bot.sendMessage(msg.chat.id, message, { parse_mode: 'HTML' });
+      }
     } catch (error) {
       console.error('Failed to get attendance records:', error);
       bot.sendMessage(msg.chat.id, 'Failed to get attendance records');
     }
   }
+
+
+
+
+
 
   // }
   // Remove this comment for Production & Main Bot
@@ -247,64 +368,64 @@ To input checkout time mention the @choto_bot_bot with these prompts,
 
 
 // Handle the received location from the user
-bot.on('location', async (msg) => {
-  const chatId = msg.chat.id;
-  const { latitude, longitude } = msg.location;
+// bot.on('location', async (msg) => {
+//   const chatId = msg.chat.id;
+//   const { latitude, longitude } = msg.location;
 
-  //console.log(latitude, longitude)
-  // Implement location validation logic
-  const isValidLocation = validateLocation(latitude, longitude);
+//   //console.log(latitude, longitude)
+//   // Implement location validation logic
+//   const isValidLocation = validateLocation(latitude, longitude);
 
 
-  ////// ******************** Put The Attendence Logics Here.
-  // check-in logic // -----------------> **********************
-  if (isValidLocation) {
-    // Attendance is valid
-    // check-in logic // ----------------->
+//   ////// ******************** Put The Attendence Logics Here.
+//   // check-in logic // -----------------> **********************
+//   if (isValidLocation) {
+//     // Attendance is valid
+//     // check-in logic // ----------------->
 
-    const currentTime = new Date();
-    const currentHour = currentTime.getHours();
+//     const currentTime = new Date();
+//     const currentHour = currentTime.getHours();
 
-    let greeting = '';
+//     let greeting = '';
 
-    if (currentHour >= 5 && currentHour < 12) {
-      greeting = 'Good morning!';
-    } else if (currentHour >= 12 && currentHour < 17) {
-      greeting = 'Good afternoon!';
-    } else {
-      greeting = 'Good evening!';
-    }
+//     if (currentHour >= 5 && currentHour < 12) {
+//       greeting = 'Good morning!';
+//     } else if (currentHour >= 12 && currentHour < 17) {
+//       greeting = 'Good afternoon!';
+//     } else {
+//       greeting = 'Good evening!';
+//     }
 
-    const timestamp = new Date(msg.date * 1000);
-    const today = new Date().setHours(0, 0, 0, 0);
+//     const timestamp = new Date(msg.date * 1000);
+//     const today = new Date().setHours(0, 0, 0, 0);
 
-    const existingRecord = await attendanceCollection.findOne({
-      userName: msg.from.first_name,
-      userId: msg.from.id,
-      timestamp: { $gte: new Date(today) },
-      type: 'checkin',
-    });
+//     const existingRecord = await attendanceCollection.findOne({
+//       userName: msg.from.first_name,
+//       userId: msg.from.id,
+//       timestamp: { $gte: new Date(today) },
+//       type: 'checkin',
+//     });
 
-    if (existingRecord) {
-      bot.sendMessage(msg.chat.id, `Hi, ${msg.from.first_name}, you have already checked in today at ${formatDate(existingRecord.timestamp)}.`);
-      return;
-    }
+//     if (existingRecord) {
+//       bot.sendMessage(msg.chat.id, `Hi, ${msg.from.first_name}, you have already checked in today at ${formatDate(existingRecord.timestamp)}.`);
+//       return;
+//     }
 
-    //console.log(`User ${msg.from.id} checked in at ${formatDate(timestamp)}`);
+//     //console.log(`User ${msg.from.id} checked in at ${formatDate(timestamp)}`);
 
-    await attendanceCollection.insertOne({
-      userName: msg.from.first_name,
-      userId: msg.from.id,
-      timestamp,
-      type: 'checkin',
-    });
-    bot.sendMessage(msg.chat.id, `Hi! 👋🏻 ${msg.from.first_name}, it's ${formatDate(timestamp)} ${greeting} It's nice to have you here!`);
+//     await attendanceCollection.insertOne({
+//       userName: msg.from.first_name,
+//       userId: msg.from.id,
+//       timestamp,
+//       type: 'checkin',
+//     });
+//     bot.sendMessage(msg.chat.id, `Hi! 👋🏻 ${msg.from.first_name}, it's ${formatDate(timestamp)} ${greeting} It's nice to have you here!`);
 
-  } else {
-    // Invalid location
-    bot.sendMessage(msg.chat.id, 'We could not find you at Traideas. Your attendance was not recorded.');
-  }
-});
+//   } else {
+//     // Invalid location
+//     bot.sendMessage(msg.chat.id, 'We could not find you at Traideas. Your attendance was not recorded.');
+//   }
+// });
 
 
 
