@@ -1,0 +1,643 @@
+GET http://localhost:3001
+
+
+###
+
+GET http://localhost:3001/posts
+Authorization: AVANFUTURA eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoicnNha2liMTEyNyIsImlhdCI6MTY0OTU4Njc4Mn0.lcpLZuBLE9TTjuHO6mt5bQaxHT8fq5ixkAEcViMeY84
+
+
+###
+
+POST http://localhost:3000/auth/login 
+Content-Type: application/json
+
+{
+    "email": "demo2@email.com",
+    "password": "zaq13edc"
+    
+}
+
+
+###
+
+GET http://localhost:3000/auth/update
+Authorization: AVANFUTURA eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoicnNha2liMDAyIiwiaWF0IjoxNjQ5NjMzOTUzfQ.3QBI-CNu4jiENn0-_jcUhDZTDPHoaCbRjm9Qxd-m0f8
+
+
+###
+
+POST http://localhost:3000/auth/update
+Authorization: AVANFUTURA eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoicnNha2liMDAyIiwiaWF0IjoxNjQ5NjMzOTUzfQ.3QBI-CNu4jiENn0-_jcUhDZTDPHoaCbRjm9Qxd-m0f8
+Content-Type: application/json
+
+{
+    "username": "rsakib001",
+    "password": "zaq13edc",
+    "newPassword": "zaq1 3edc"
+    
+}
+
+###
+
+POST http://localhost:3001/auth/register
+
+
+
+Content-Type: application/json
+
+{
+    "password": "zaq13edc",
+    "email": "demo2@email.com",
+    "status": true
+
+}
+
+
+
+
+
+###
+
+
+
+
+###
+
+POST http://localhost:3001/auth/register-client
+
+
+
+Content-Type: application/json
+
+{
+    "password": "zaq13edc",
+    "email": "demo2@email.com",
+  
+
+}
+
+
+
+
+GET http://localhost:3001/idds
+Authorization: AVANFUTURA eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoicnNha2liMDAyIiwiaWF0IjoxNjQ5OTAzMjU4fQ.X_5ORoyar1NI06w9HDS8t4uyXIqap5rHV4gqqRkfBq0
+###
+
+GET http://localhost:3001/idds/621f580a15d3daf0dbb06601
+Authorization: AVANFUTURA eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoicnNha2liMDAyIiwiaWF0IjoxNjQ5OTAzMjU4fQ.X_5ORoyar1NI06w9HDS8t4uyXIqap5rHV4gqqRkfBq0
+
+
+###
+
+GET http://localhost:3001/roles
+
+
+###
+
+POST http://localhost:3001/roles
+
+Content-Type: application/json
+
+{
+    
+    "role": "client"
+
+}
+
+###
+DELETE http://localhost:3001/roles/62555073ba368ff14192f1d6
+
+
+###
+
+GET http://localhost:3001/user-roles
+
+
+###
+
+POST http://localhost:3001/user-roles
+
+Content-Type: application/json
+
+{
+    "username": "rsakib002",
+    "role": "client"
+
+}
+
+
+
+###
+
+###
+DELETE http://localhost:3001/user-roles
+
+
+###
+
+GET http://localhost:3001/permission
+
+
+###
+
+POST http://localhost:3001/permission
+
+Content-Type: application/json
+
+{
+    "username": "rsakib002",
+    "role": "client"
+
+}
+
+
+
+
+
+###
+GET  http://127.0.0.1:3001/permission
+
+
+
+
+
+###
+DELETE http://localhost:3001/permission
+
+
+###
+POST http://127.0.0.1:3001/permission
+
+Content-Type: application/json
+
+{
+    "role": "inventor",
+    "role_id": "62576c912ffe184c55394c7b",
+    "route": "moduleList",
+     "method":{
+         "create": true,
+         "update": true,
+         "get": true,
+         "getByKey": true,
+         "getById": true,
+         "remove": true
+     }
+}
+    
+
+
+###
+POST http://127.0.0.1:3001/permission/key
+
+Content-Type: application/json
+
+{
+    "role": "inventor"
+}
+
+
+
+
+
+
+###
+POST http://127.0.0.1:3001/moduleList
+Authorization: AVANFUTURA eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoicnNha2liMDAyIiwiaWF0IjoxNjQ5OTAzMjU4fQ.X_5ORoyar1NI06w9HDS8t4uyXIqap5rHV4gqqRkfBq0
+Content-Type: application/json
+
+{
+    "list": ["clients", "idds", "agents", "permission", "drawings", "user-roles", "roles", "technical-templates", "users", "moduleList", "inventors"],
+
+    "clients": {
+        "method":{
+            "create": false,
+            "update": false,
+            "get": true,
+            "getByKey": false,
+            "getById": false,
+            "remove": false
+        }
+    },
+
+    "idds": {
+        "method":{
+            "create": false,
+            "update": false,
+            "get": true,
+            "getByKey": false,
+            "getById": false,
+            "remove": false,
+            "getEditHistory": true,
+            "trackChange": true
+        }
+    },
+
+    "agents": {
+        "method":{
+            "create": false,
+            "update": false,
+            "get": true,
+            "getByKey": false,
+            "getById": false,
+            "remove": false
+        }
+    },
+
+    "technical-templates": {
+        "method":{
+            "create": false,
+            "update": false,
+            "get": true,
+            "getByKey": false,
+            "getById": false,
+            "remove": false
+        }
+    },
+
+    "users": {
+        "method":{
+            "create": false,
+            "update": false,
+            "get": true,
+            "getByKey": false,
+            "getById": false,
+            "remove": false
+        }
+    },
+
+
+    "roles": {
+        "method":{
+            "create": false,
+            "update": false,
+            "get": true,
+            "getByKey": false,
+            "getById": false,
+            "remove": false
+        }
+    },
+
+
+    "inventors": {
+        "method":{
+            "create": false,
+            "update": false,
+            "get": true,
+            "getByKey": false,
+            "getById": false,
+            "remove": false
+        }
+    },
+
+    "user-roles": {
+        "method":{
+            "create": false,
+            "update": false,
+            "get": true,
+            "getByKey": false,
+            "getById": false,
+            "remove": false
+        }
+    },
+
+    "permission": {
+        "method":{
+            "create": false,
+            "update": false,
+            "get": true,
+            "getByKey": false,
+            "getById": false,
+            "remove": false
+        }
+    },
+
+    "moduleList": {
+        "method":{
+            "create": false,
+            "update": false,
+            "get": true,
+            "getByKey": false,
+            "getById": false,
+            "remove": false
+        }
+    },
+
+    "drawings": {
+        "method":{
+            "create": false,
+            "update": false,
+            "get": true,
+            "getByKey": false,
+            "getById": false,
+            "remove": false
+        }
+    }
+
+
+}
+
+
+
+
+####### client module ######
+
+###
+GET  http://127.0.0.1:3001/clients
+Authorization: AVANFUTURA eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoicnNha2liMDAyIiwiaWF0IjoxNjQ5OTAzMjU4fQ.X_5ORoyar1NI06w9HDS8t4uyXIqap5rHV4gqqRkfBq0
+
+###
+POST http://127.0.0.1:3000/clients
+Authorization: AVANFUTURA eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImRlbW8yQGVtYWlsLmNvbSIsImlhdCI6MTY1MDE2NDk3OH0.MNzfsOgzU4HUOl9VUkzwq0_lp4rqyIBQxM_OK2SpwDs
+
+Content-Type: application/json
+
+{
+    "email": "demo21@email.com",
+    "password": "hello world",
+    "status": true,
+    "clientName":"Limon Safayet",
+    "customerNo": "2022424",
+    "depositeAccount": "235256346346",
+    "clientAddress": "6/2 S. S Alam Road, Masdair",
+    "clientCity": "Narayanganj",
+    "clientState": "Dhaka",
+    "clientZip": "1400",
+    "clientCountry": "Bangladesh",
+    "numbers": ["01959304837"],
+    "emails": ["limon@gmail.com"]
+}
+
+###
+
+POST http://127.0.0.1:3000/inventors
+Authorization: AVANFUTURA eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImRlbW8yQGVtYWlsLmNvbSIsImlhdCI6MTY1MDE2NDk3OH0.MNzfsOgzU4HUOl9VUkzwq0_lp4rqyIBQxM_OK2SpwDs
+
+
+Content-Type: application/json
+
+{
+    "inventorFirstName": "Limon",
+    "inventorLastName": "Safayet",
+    "inventorRegistrationNumber": "341-01-1548",
+    "inventorTelephone": "217-796-9051",
+    "inventorFax": "331-643-3239",
+    "inventorAddress": "4079 Spring Street",
+    "inventorEmail": "raegan_bauc5@hotmail.com",
+    "inventorFirmName": "Dyle"
+}
+
+
+
+###
+POST http://127.0.0.1:3000/useriddmap
+Authorization: AVANFUTURA eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImRlbW8yQGVtYWlsLmNvbSIsImlhdCI6MTY1MDE2NDk3OH0.MNzfsOgzU4HUOl9VUkzwq0_lp4rqyIBQxM_OK2SpwDs
+
+
+Content-Type: application/json
+
+{
+    "user_id": "p",
+    "idd_id": ""
+}
+
+
+###
+GET http://localhost:3000/files/6273d6caa50fb5608bc06dbd
+Authorization: AVANFUTURA eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImRlbW8yQGVtYWlsLmNvbSIsImlhdCI6MTY1MDE2NDk3OH0.MNzfsOgzU4HUOl9VUkzwq0_lp4rqyIBQxM_OK2SpwDs
+
+
+Content-Type: application/json
+
+{
+    "user_id": "p",
+    "idd_id": ""
+}
+
+
+###
+POST http://localhost:3000/drawings
+
+Content-Type: application/json
+{
+    "content": {
+        "type": "IDD",
+        "contentId": ""
+    },
+    "DescriptionList": [],
+    "markerList": [],
+    "imageID": ""
+
+}
+
+
+
+###
+
+
+DELETE http://localhost:3000/idds/627b6ed6e92f5e34bd3bdd95
+Authorization: Avanfutura eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbiI6IjYyNmY5ZTBmYWY5OTY1NGViODIxNTA4YyIsInRpbWVzdGFtcCI6MTY1MTQ4MjEyNzA5MiwidXNlciI6IjYyNWJlZDUxMzA1YmMxNzk2YjE3NmE1ZCIsImlhdCI6MTY1MTQ4MjEyN30.5LKkdJoWTTR6wKEBUruMOgawL7t65c2VTKRYfCgWwUk
+
+###
+
+### Invitation Created by admin ###
+
+
+POST http:://127.0.0.1:3000/invite
+Authorization: Avanfutura eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbiI6IjYyNmY5ZTBmYWY5OTY1NGViODIxNTA4YyIsInRpbWVzdGFtcCI6MTY1MTQ4MjEyNzA5MiwidXNlciI6IjYyNWJlZDUxMzA1YmMxNzk2YjE3NmE1ZCIsImlhdCI6MTY1MTQ4MjEyN30.5LKkdJoWTTR6wKEBUruMOgawL7t65c2VTKRYfCgWwUk
+
+Content-Type: application/json
+{   
+    "firstName": "Test",
+    "lastName": "user",
+    "email": "demo010@gmail.com",
+    "client": null,
+    "attorney": true
+}
+
+
+### Invitation Response ###
+
+### invitation Data for user ###
+GET http://127.0.0.1:3000/invite/response/75dc87fa28ec15b2cd22ea59da720fedac5a9257
+
+# Do not need any header or authentication for accessing data via this url
+
+POST http://127.0.0.1:3000/invite/response/75dc87fa28ec15b2cd22ea59da720fedac5a9257
+
+
+Content-Type: application/json
+{
+    "firstName": "Test",
+    "lastName": "user",
+    "email": "demo011@gmail.com",
+    "password": "123456"
+}
+
+
+
+### Invitation Pending List ###
+
+GET http://127.0.0.1:3000/invite/pending
+
+### for deleting any invitation ###
+# use the userID as id from invitation user table  
+DELETE  http://127.0.0.1:3000/invite/{ _id { userId } as ID  from invitation List for deleting any user invitation }
+
+
+
+  #####################
+ ### Requests  API ###
+#####################
+
+### Get all the request of client/attorney user
+POST http://localhost:3000/request/key
+Authorization: Avanfutura eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbiI6IjYyNmY5ZTBmYWY5OTY1NGViODIxNTA4YyIsInRpbWVzdGFtcCI6MTY1MTQ4MjEyNzA5MiwidXNlciI6IjYyNWJlZDUxMzA1YmMxNzk2YjE3NmE1ZCIsImlhdCI6MTY1MTQ4MjEyN30.5LKkdJoWTTR6wKEBUruMOgawL7t65c2VTKRYfCgWwUk
+
+Content-Type: application/json
+{
+    "role": "client"
+}
+
+
+### GET user request of client/attorney user
+localhost:3000/request/63285afabaa9024dad441142
+Authorization: Avanfutura eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbiI6IjYyNmY5ZTBmYWY5OTY1NGViODIxNTA4YyIsInRpbWVzdGFtcCI6MTY1MTQ4MjEyNzA5MiwidXNlciI6IjYyNWJlZDUxMzA1YmMxNzk2YjE3NmE1ZCIsImlhdCI6MTY1MTQ4MjEyN30.5LKkdJoWTTR6wKEBUruMOgawL7t65c2VTKRYfCgWwUk
+
+
+
+
+### Delete user request of client/attorney user
+DELETE  http://localhost:3000/request/userId
+Authorization: Avanfutura eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbiI6IjYyNmY5ZTBmYWY5OTY1NGViODIxNTA4YyIsInRpbWVzdGFtcCI6MTY1MTQ4MjEyNzA5MiwidXNlciI6IjYyNWJlZDUxMzA1YmMxNzk2YjE3NmE1ZCIsImlhdCI6MTY1MTQ4MjEyN30.5LKkdJoWTTR6wKEBUruMOgawL7t65c2VTKRYfCgWwUk
+
+Content-Type: application/json
+{
+    "role": "client"
+}
+
+
+
+### Accept User Request client/attorney user
+PUT  http://localhost:3000/request/userId
+Content-Type: application/json
+{
+    "accept": true
+}
+
+
+
+#######################################################
+
+
+  ################################
+ ### Onboarding Requests  API ###
+################################
+
+
+
+### Create onboarding Request ###
+POST http://localhost:3000/onboardingrequest
+Json Type: 1
+{
+    "creatorUID": "63285afabaa9024dad441141", //user ID of creator
+    "clientUID": "63285afabaa9024dad441143", //userID of client
+    "attorneyUID": "633d8787cd1d77caa933e2a0", // userID of attorney
+    "requestType": "attorney" // Request Type 1. Attorney onboarding
+}
+
+Json Type: 2
+
+{
+    "creatorUID": "63285afabaa9024dad441141",
+    "clientUID": "63285afabaa9024dad441143",
+    "attorneyUID": "633d8787cd1d77caa933e2a0",
+    "requestType": "clinet" // Request Type 2. Client onboarding
+}
+
+
+
+### GET Onboarding request for Admin Panel handled by admin ###
+
+GET http://localhost:3000/onboardingrequest/
+
+
+### GET Onboarding Request Made by an user ###
+
+GET http://localhost:3000/onboardingrequest/user/{creator userId}
+
+
+### GET BY request Type ###
+
+### There are two types of request on is for onboarding attorney and one is for onboarding client
+
+post http://localhost:3000/onboardingrequest/type
+Json Type: 1
+{
+    "requestType": "client"
+}
+
+
+Json Type: 2
+{
+    "requestType": "attorney"
+}
+
+
+### For accepting a request an Onboarding request by the admin  ###
+
+POST http:/localhost:3000/onboardingrequest/accept/{onboarding Request ID}
+
+{
+    "accept": true
+}
+
+### For Rejecting A request just change the Json 
+
+{
+    "accept": false
+}
+
+
+#############################################################
+
+
+
+  ##################################
+ ### Registration Requests  API ###
+##################################
+POST http://localhost:3000/auth/register
+
+Json Type 1: 
+{   
+    "firstName": "attorney",
+    "lastName": "user",
+    "email": "attorney05@user.com",
+    "password": "123456",
+    "client": null,
+    "attorney": true
+}
+
+
+Json Type: 2
+
+{   
+    "firstName": "Client",
+    "lastName": "user",
+    "email": "client06@user.com",
+    "password": "123456",
+    "client": true,
+    "attorney": null
+}
+
+
+
+
+
+//rest
+
+
+
+
+
+

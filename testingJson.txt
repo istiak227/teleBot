@@ -1,0 +1,243 @@
+13-11-2020 T06:33:32 By Admin
+13-11-2020 T06:33:32 By Inventor
+13-11-2020 T06:33:32 By Inventor
+13-11-2020 T06:33:32 By Agent
+13-11-2020 T06:33:32 By Admin
+
+url= http://127.0.0.1:3000/idd/edit-history/6210bce6a12be00bff9208dd
+{
+   
+   "key": "eh_inventionTitle"
+
+
+}
+
+
+
+URL: http://127.0.0.1:3000/idd
+METHOD: get
+
+
+URL = http://127.0.0.1:3000/idd/6210bce6a12be00bff9208dd
+METHOD: get, Post, Update
+{
+ "inventionTitle": "hello",
+    "technicalField": "world",
+    "inventionDetails": "testing",
+    "timeStamp": "Date.now()01",
+    "username": "rsakib11271",
+    "role": "admin" 
+ }
+
+
+
+ 
+URL = http://127.0.0.1:3000/idd/track-change/6210bce6a12be00bff9208dd
+ 
+ {
+    "timeStamp": "Date.now()01",
+    "author": "rsakib11271",
+    "role": "admin"
+}
+
+
+
+{
+    
+    "techTempTitle": "Furnace ",
+    "techTempDescription": "A method for separating a blast furnace gas according to a first embodiment includes performing a blast furnace operation by injecting oxygen-enriched air having an oxygen concentration of 25 vol% or higher into a blast furnace from a tuyere provided in the lower part of the blast furnace, recovering the blast furnace gas discharged from the blast furnace top by the blast furnace operation, and separating and removing carbon dioxide and nitrogen from the recovered blast furnace gas. The first embodiment will now be described in specific detail."
+}
+
+
+URL: 127.0.0.1:5000/inventors/key
+
+body: 
+{
+    
+  
+    
+       
+        "key":"username", "value": "rsakib1127"
+    
+}
+
+result: 
+
+[
+    {
+        "_id": "6219fd2ee97ff8187bd00129",
+        "inventorFirstName": "Limon",
+        "inventorLastName": "Safayet",
+        "inventorRegistrationNumber": "341-01-1548",
+        "inventorTelephone": "217-796-9051",
+        "inventorFax": "331-643-3239",
+        "inventorAddress": "4079 Spring Street",
+        "inventorEmail": "raegan_bauc5@hotmail.com",
+        "inventorFirmName": "Dyle",
+        "username": "rsakib1127"
+    }
+]
+
+
+
+custom search
+127.0.0.1:3000/users/key
+method: POST
+
+{
+
+        "key":"email", "value": "admin@gmail.com"
+    
+}
+
+
+
+GET http://localhost:3001
+
+
+###
+
+GET http://localhost:3001/posts
+Authorization: AVANFUTURA eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoicnNha2liMTEyNyIsImlhdCI6MTY0OTU4Njc4Mn0.lcpLZuBLE9TTjuHO6mt5bQaxHT8fq5ixkAEcViMeY84
+
+
+###
+
+POST http://localhost:3001/login 
+Content-Type: application/json
+
+{
+    "username": "rsakib002",
+    "password": "zaq1 3edc"
+    
+}
+
+
+###
+
+POST http://localhost:3001/update
+Authorization: AVANFUTURA eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoicnNha2liMDAyIiwiaWF0IjoxNjQ5NjMzOTUzfQ.3QBI-CNu4jiENn0-_jcUhDZTDPHoaCbRjm9Qxd-m0f8
+Content-Type: application/json
+
+{
+    "username": "rsakib001",
+    "password": "zaq13edc",
+    "newPassword": "zaq1 3edc"
+    
+}
+
+###
+
+POST http://localhost:3001/register
+
+Content-Type: application/json
+
+{
+    "username": "rsakib002",
+    "password": "zaq13edc",
+    "email": "demo1@email.com",
+    "status": "true"
+
+}
+
+
+
+###
+
+GET http://localhost:3001/idds
+
+###
+
+GET http://localhost:3001/idds/621f580a15d3daf0dbb06601
+
+
+###
+
+GET http://localhost:3001/roles
+
+
+###
+
+POST http://localhost:3001/roles
+
+Content-Type: application/json
+
+{
+    
+    "role": "client"
+
+}
+
+###
+DELETE http://localhost:3001/roles/62555073ba368ff14192f1d6
+
+
+###
+
+GET http://localhost:3001/user-roles
+
+
+###
+
+POST http://localhost:3001/user-roles
+
+Content-Type: application/json
+
+{
+    "username": "rsakib002",
+    "role": "client"
+
+}
+
+
+
+###
+
+###
+DELETE http://localhost:3001/user-roles
+
+
+###
+
+GET http://localhost:3001/permission
+
+
+###
+
+POST http://localhost:3001/permission
+
+Content-Type: application/json
+
+{
+    "username": "rsakib002",
+    "role": "client"
+
+}
+
+
+
+###
+
+
+DELETE http://localhost:3001/permission
+
+
+###
+POST http://127.0.0.1:3001/permission
+
+Content-Type: application/json
+
+{
+    "role": "6256857890cf8a268b949ba3",
+    "route": "clients",
+    "method": {
+        "create": false,
+        "update": true,
+        "get": true,
+        "getByKey": false,
+        "getById": false,
+        "remove": false
+    }
+        
+
+}
