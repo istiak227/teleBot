@@ -1,7 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const {
-  getSummary,
+  createSummary,
   createTable,
   getWeeklySummary,
   getEmployee,
@@ -9,7 +9,7 @@ const {
 } = require("../../controllers/attendacneSummary/index");
 
 router.post("/crt", createTable);
-router.post("/getSummary", getSummary);
+router.post("/createSummary", createSummary);
 router.post("/getWeekly", getWeeklySummary);
 router.get("/getEmployee", getEmployee);
 router.post("/getEmpdata", getEmpDataList);

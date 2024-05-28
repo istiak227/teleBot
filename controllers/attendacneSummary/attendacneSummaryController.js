@@ -25,10 +25,10 @@ module.exports = {
     }
   },
 
-  async getSummary(req, res) {
+  async createSummary(req, res) {
     try {
       console.log("Controller", req);
-      let response = await attendanceService.get(req.body);
+      let response = await attendanceService.crtSummary(req.body);
       return res.status(response.status).send(response);
     } catch (err) {
       console.log(err);

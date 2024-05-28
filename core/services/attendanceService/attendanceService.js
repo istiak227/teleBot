@@ -187,7 +187,7 @@ module.exports = {
         let getEmp = await db
           .collection("Employee")
           .findOne({ userId: data.userId[i] });
-        if (getEmp.data) {
+        if (Object.keys(getEmp.data).length > 0) {
           return {
             status: 409,
             error: true,
@@ -217,7 +217,7 @@ module.exports = {
     }
   },
 
-  async get(data) {
+  async crtSummary(data) {
     try {
       console.log("inside summary get service");
       console.log(data);
