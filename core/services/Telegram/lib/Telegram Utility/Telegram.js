@@ -2,6 +2,7 @@ const { getAxiosInstance } = require("./axios");
 const { errorHandler } = require("./errorhelper");
 const { handleCommand } = require("./handleCommands/index");
 const { handleCheckIn, handleCheckOut } = require("./botLogic/index");
+const { botMessages } = require("./handleMessages/index");
 const BOT_TOKEN = process.env.MY_BOT_TOKEN;
 const BASE_URL = `https://api.telegram.org/bot${BOT_TOKEN}`;
 const axiosInstance = getAxiosInstance(BASE_URL);
@@ -39,6 +40,8 @@ async function handleMessage(messageObj) {
       return sendMessage(returnedObj.chatId, returnedObj.message);
     }
 
+    // const returnedObj = await botMessages(messageObj, chatId);
+    // return sendMessage(returnedObj.chatId, returnedObj.message);
     if (
       chkInPrompts.some((prompt) => messageText?.toLowerCase().includes(prompt))
     ) {
