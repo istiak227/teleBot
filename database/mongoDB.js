@@ -1,4 +1,7 @@
 const { MongoClient } = require("mongodb");
+const {
+  setupWebhook,
+} = require("../core/services/Telegram/lib/TelegramWebHookSetup/botConnection");
 require("dotenv").config();
 
 const uri = process.env.DB_CONNECTION;
@@ -17,6 +20,7 @@ module.exports = function () {
 
     const data = client.db(database);
     console.log("Database connected");
+    setupWebhook();
     return data;
     // return await client
   } catch (e) {
