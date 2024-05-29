@@ -24,7 +24,6 @@ function sendMessage(chatId, messageText) {
 
 async function handleMessage(messageObj) {
   const messageText = messageObj.text || "";
-
   if (!messageText) {
     errorHandler("No message text", "handleMessage");
     return "";
@@ -34,9 +33,9 @@ async function handleMessage(messageObj) {
     const chatId = messageObj.chat.id;
 
     if (messageText.charAt(0) === "/") {
-      const command = messageText.substr(1);
-      console.log("consoling command", command);
-      const returnedObj = await handleCommand(command, chatId);
+      console.log("commanding");
+
+      const returnedObj = await handleCommand(messageObj, chatId);
       return sendMessage(returnedObj.chatId, returnedObj.message);
     }
 
