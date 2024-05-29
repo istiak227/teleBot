@@ -11,6 +11,7 @@ module.exports = {
         console.log("help log");
         return { chatId, message: `${helpCommandReply}` };
       case "attendance":
+        //if not from istiak vai /limon vai or/ sakib vai
         if (
           command.from.id === 1401694380 ||
           command.from.id === 1446184753 ||
