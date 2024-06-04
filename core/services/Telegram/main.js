@@ -1,4 +1,6 @@
-const { handleMessage } = require("../Telegram/lib/Telegram Utility/Telegram");
+const {
+  handleMessage,
+} = require("./lib/Telegram Utility/messageSender/Telegram");
 
 module.exports = {
   async handler(req, mehtod) {
