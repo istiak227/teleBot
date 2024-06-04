@@ -1,6 +1,8 @@
 const { getGreeting } = require("../botUtility/index");
 const { db } = require("../../../../../database/index");
 const { formatDate } = require("../botUtility/index");
+
+//bot logics for a custom command/or message can be written here
 module.exports = {
   //logic for check in
 

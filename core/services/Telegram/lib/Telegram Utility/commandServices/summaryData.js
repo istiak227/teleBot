@@ -1,5 +1,5 @@
-const { db } = require("../../../../database/index.js");
-const statusCode = require("../../../../status/statusCode.js");
+const { db } = require("../../../../../database/index.js");
+const statusCode = require("../../../../../status/statusCode.js");
 function formatTimeDifference(checkinTime, checkoutTime) {
   const inTime = new Date(checkinTime);
   const outTime = new Date(checkoutTime);

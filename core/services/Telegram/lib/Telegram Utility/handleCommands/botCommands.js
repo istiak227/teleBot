@@ -1,4 +1,4 @@
-const { createSummary } = require("../summaryData");
+const { createSummary } = require("../commandServices/summaryData");
 const { helpCommandReply } = require("../botUtility/index");
 
 module.exports = {
