@@ -10,11 +10,6 @@ const router = require("./routerManager");
 const dbHelper = require("./helpers/dbHelper");
 const port = process.env.PORT || 8000;
 const cookieParser = require("cookie-parser");
-const { handler } = require("./core/services/Telegram/main.js");
-const TelegramBot = require("node-telegram-bot-api");
-const { db } = require("./core/database/index.js");
-
-const TELEGRAM_BOT_TOKEN = "6814546836:AAGLU_rWFnE3r4LO1AF3QaGVDnhESVXLlxk";
 
 app.use(cors({ origin: "*" }));
 app.use(cookieParser());
