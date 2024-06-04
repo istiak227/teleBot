@@ -22,6 +22,12 @@ async function handleMessage(messageObj) {
     return sendMessage(returnedObj.chatId, returnedObj.message);
   } catch (error) {
     errorHandler(error, "handleMessage");
+    return {
+      status: 500,
+      error: true,
+      message: "error inside handle message method",
+      data: error,
+    };
   }
 }
 

@@ -17,6 +17,7 @@ module.exports = {
       }
     } catch (error) {
       console.error("Error handling normal message:", error);
+      return { chatId: chatId, message: "There was a problem while " };
     }
   },
 };

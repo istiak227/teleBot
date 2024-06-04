@@ -6,7 +6,8 @@
   "scripts": {
     "start": "node index.js",
     "start-dev": "nodemon index.js",
-    "test": "mocha"
+    "test": "mocha test",
+    "coverage":"nyc yarn run test"
   },
   "author": "traideas",
   "dependencies": {
@@ -28,12 +29,15 @@
     "lodash": "^4.17.21",
     "mongodb": "^4.3.1",
     "morgan": "~1.9.1",
-    "ngrok": "^5.0.0-beta.2",
     "pug": "^3.0.2",
     "uuid": "^8.3.2",
     "xlsx": "^0.18.5"
   },
   "devDependencies": {
-    "nodemon": "^2.0.15"
+    "chai": "^4.2.0",
+    "chai-http": "^4.4.0",
+    "mocha": "^10.4.0",
+    "nodemon": "^2.0.15",
+    "nyc": "^15.1.0"
   }
 }

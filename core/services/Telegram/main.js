@@ -14,6 +14,12 @@ module.exports = {
       return;
     } catch (error) {
       console.log(error, "error in main js");
+      return {
+        status: 500,
+        error: true,
+        message: "Internal handler method error",
+        data: error,
+      };
     }
   },
 };
