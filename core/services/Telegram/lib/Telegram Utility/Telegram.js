@@ -49,6 +49,7 @@ async function handleMessage(messageObj) {
     }
 
     if (chkOutPrompts.some((prompt) => messageText.includes(prompt))) {
+      console.log("checkout");
       const returnedObj = await handleCheckOut(messageObj, chatId);
       return sendMessage(returnedObj.chatId, returnedObj.message);
     }
