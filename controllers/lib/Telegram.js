@@ -8,8 +8,14 @@ const { db } = require("../../core/database");
 const message = require("../../core/status/message");
 const { duplicate } = require("../../core/services/duplication");
 
-const MY_Token = "6814546836:AAGLU_rWFnE3r4LO1AF3QaGVDnhESVXLlxk";
-const BASE_URL = `https://api.telegram.org/bot${MY_Token}`;
+// const Bot_Token = process.env.TRAIDEASCHOTO_BOT;
+// const BASE_URL = `https://api.telegram.org/bot${Bot_Token}`;
+
+
+// const axiosInstance = getAxiosInstance(BASE_URL);
+
+const Bot_Token = process.env.TRAIDEASCHOTO_BOT;
+const BASE_URL = `https://api.telegram.org/bot${Bot_Token}`;
 const axiosInstance = getAxiosInstance(BASE_URL);
 
 const helpCommandreply = `To input checkin time message with these prompts,

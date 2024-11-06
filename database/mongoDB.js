@@ -20,7 +20,7 @@ module.exports = function () {
 
     const data = client.db(database);
     console.log("Database connected");
-    setupWebhook();
+    // setupWebhook();
     return data;
     // return await client
   } catch (e) {

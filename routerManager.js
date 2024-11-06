@@ -1,4 +1,4 @@
-const attendanceRoutes = require("./routes/attendanceRoutes");
+const attendanceRoutes = require("./Routes/attendanceRoutes");
 const telebotRoutes = require("./Routes/telebotRoutes/index");
 module.exports = function () {
   app.use("/home", (req, res) => {

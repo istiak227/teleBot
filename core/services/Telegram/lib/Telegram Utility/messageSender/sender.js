@@ -1,8 +1,9 @@
 const { getAxiosInstance } = require("../api/axios");
 const { errorHandler } = require("../api/errorhelper");
 
-const BOT_TOKEN = process.env.MY_BOT_TOKEN;
-const BASE_URL = `https://api.telegram.org/bot${BOT_TOKEN}`;
+const Bot_Token = process.env.TRAIDEASCHOTO_BOT;
+const Telegram_URL=process.env.TELEGRAM_URL;
+const BASE_URL = `${Telegram_URL}${Bot_Token}`;
 const axiosInstance = getAxiosInstance(BASE_URL);
 
 module.exports = {

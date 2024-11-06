@@ -13,7 +13,6 @@ const createErrorMessage = (message, data) => {
 module.exports = {
   async botController(req, res) {
     try {
-      // console.log("Controller", req);
       let response = await botServices.handler(req);
       return res.status(200).send(response);
     } catch (err) {
