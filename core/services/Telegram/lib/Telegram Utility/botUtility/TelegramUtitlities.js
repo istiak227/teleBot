@@ -15,8 +15,19 @@ const chkInPrompts = ["hi", "hello", "morning", "good morning", "salam"];
 const chkOutPrompts = ["bye", "tata", "goodbye", "checkout"];
 
 module.exports = {
-  formatDate(date) {
-    return date.toString().split(" GMT")[0];
+   formatDate(date) {
+    const options = {
+      weekday: 'short',
+      year: 'numeric',
+      month: 'short',
+      day: 'numeric',
+      hour: 'numeric',
+      minute: 'numeric',
+      second: 'numeric',
+      hour12: true,
+    };
+  
+    return new Date(date).toLocaleString('en-US', options);
   },
   getGreeting(currentHour) {
     if (currentHour >= 5 && currentHour < 12) {
