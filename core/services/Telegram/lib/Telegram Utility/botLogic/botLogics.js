@@ -8,6 +8,7 @@ module.exports = {
 
   async handleCheckIn(messageObj, chatId) {
     try {
+      console.log("hi message",messageObj)
       const currentTime = new Date();
       const currentHour = currentTime.getHours();
       const greeting = getGreeting(currentHour);
@@ -21,7 +22,7 @@ module.exports = {
         timestamp: { $gte: new Date(today) },
         type: "checkin",
       });
-      console.log("inside message object", messageObj, chatId);
+      // console.log("inside message and messacre object", messageObj, chatId);
 
       if (existingRecord && Object.keys(existingRecord.data).length > 0) {
         return {

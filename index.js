@@ -16,6 +16,29 @@ app.use(cookieParser());
 
 app.use(express.json());
 
+//bot start
+const TelegramBot = require("node-telegram-bot-api");
+const botServices = require("./core/services/Telegram/main");
+
+const Bot_Token = process.env.TRAIDEASCHOTO_BOT;
+const bot = new TelegramBot(Bot_Token, { polling: true });
+
+
+bot.on("message", async (msg) => {
+  try {
+    const response = await botServices.handler(msg);
+    console.log("response",response)
+    if (response && response.message) {
+      bot.sendMessage(response.message.chatId, response.message.message);
+    }
+  } catch (err) {
+    console.error("Error processing message:", err);
+    bot.sendMessage(msg.chat.id, "An error occurred. Please try again later.");
+  }
+});
+
+//bot end
+
 async function run() {
   try {
     this.app = app;
